@@ -3,8 +3,7 @@
 # Ensure the script stops if any command fails
 set -e
 
-# Set environment variables if needed
-export GOOGLE_APPLICATION_CREDENTIALS="C:\Users\GAPL_\Downloads\devops-testing-419206-abe64bfec3fe.json"
+gcloud auth activate-service-account --key-file="${SERVICE_ACCOUNT_KEY_PATH}"
 
 # Set variables for deployment
 FUNCTION_NAME="cloud_function1"
