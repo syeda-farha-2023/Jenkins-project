@@ -1,6 +1,6 @@
 pipeline {
     agent any
-
+    <1>
     environment {
         GOOGLE_APPLICATION_CREDENTIALS = credentials('service-account') // Replace 'service-account' with your Jenkins credentials ID
         PROJECT_ID = 'devops-testing-419206' // Replace with your actual project ID
