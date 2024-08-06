@@ -3,8 +3,6 @@ pipeline {
 
     environment {
         // Define environment variables if needed
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -61,6 +59,10 @@ pipeline {
                             dir(function) {
                                 sh './deploy.sh'
                             }
+                    // Loop through updated functions and deploy each one
+                    for (function in updatedFunctions) {
+                        dir(function) {
+                            sh './deploy.sh'
                         }
                     }
                 }
@@ -87,3 +89,4 @@ pipeline {
         }
     }
 }
+
