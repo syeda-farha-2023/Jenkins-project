@@ -84,7 +84,7 @@ pipeline {
         always {
             script {
                 sh 'rm -f .env'
-                sh 'prune -f -a'
+                sh 'rm -rf temp/*'
             }
         }
     }
