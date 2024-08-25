@@ -15,11 +15,10 @@ def main(request):
     request_args = request.args
 
     # Check for a "name" query parameter
-    name = request_args.get('name', 'Abbas')
+    name = request_args.get('name', 'Sana')
 
     # Create a response message
     message = f"Hello, {name}!"
 
     # Return the response as a JSON object
     return json.dumps({"message": message})
-
