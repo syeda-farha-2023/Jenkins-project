@@ -7,11 +7,12 @@ set -e
 export GOOGLE_APPLICATION_CREDENTIALS="C:\Users\GAPL_\Downloads\devops-testing-419206-abe64bfec3fe.json"
 
 # Set variables for deployment
-FUNCTION_NAME="cloud_function2"
+FUNCTION_NAME="cloud-function2-temp"
 ENTRY_POINT="main"  # The function name to be used as the entry point in your Python script
 REGION="asia-south1 (Mumbai)"  # e.g., us-central1
 PROJECT_ID="devops-testing-419206"
 RUNTIME="python39"  # Python runtime version
+SOURCE_DIR="."  # Current directory (where deploy.sh is located)
 
 # Deploy the function
 gcloud functions deploy $FUNCTION_NAME \

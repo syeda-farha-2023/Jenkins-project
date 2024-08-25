@@ -6,11 +6,12 @@ set -e
 gcloud auth activate-service-account --key-file="${SERVICE_ACCOUNT_KEY_PATH}"
 
 # Set variables for deployment
-FUNCTION_NAME="cloud_function1"
+FUNCTION_NAME="cloud-function1-temp"
 ENTRY_POINT="main"  # The function name to be used as the entry point in your Python script
 REGION="asia-south1 (Mumbai)"  # e.g., us-central1
 PROJECT_ID="devops-testing-419206"
 RUNTIME="python39"  # Python runtime version
+SOURCE_DIR="."  # Current directory (where deploy.sh is located)
 
 # Deploy the function
 gcloud functions deploy $FUNCTION_NAME \
