@@ -22,8 +22,11 @@ pipeline {
             steps {
                 script {
                     def targetBranch = env.CHANGE_TARGET ?: 'master'
+                    def currentBranch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
 
-                    def changedFiles = sh(script: "git diff --name-only origin/${targetBranch}...HEAD", returnStdout: true).trim().split('\n')
+                    def branchToCompare = env.CHANGE_TARGET ? "origin/${targetBranch}" : "origin/${currentBranch}"
+
+                    def changedFiles = sh(script: "git diff --name-only ${branchToCompare}...HEAD", returnStdout: true).trim().split('\n')
 
                     def updatedFunctions = []
                     def changedDirs = changedFiles.collect { it.split('/')[0] }.unique()
