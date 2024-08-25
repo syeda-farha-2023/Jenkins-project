@@ -15,7 +15,7 @@ def main(request):
     request_args = request.args
 
     # Check for a "name" query parameter
-    name = request_args.get('name', 'Sana')
+    name = request_args.get('name', 'Farha Zaidi')
 
     # Create a response message
     message = f"Hello, {name}!"
