@@ -24,11 +24,15 @@ pipeline {
                     // Get the target branch from the PR or default to 'master'
                     def targetBranch = env.CHANGE_TARGET ?: 'master'
                     
-                    // Ensure the PR source branch is known
+                    // Get the PR source branch
                     def sourceBranch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
 
+                    // Fetch only the target branch and the source branch
+                    sh "git fetch origin ${targetBranch}:${targetBranch}"
+                    sh "git fetch origin ${sourceBranch}:${sourceBranch}"
+
                     // Compare changes between the PR source branch and the target branch
-                    def changedFiles = sh(script: "git diff --name-only origin/${targetBranch}...origin/${sourceBranch}", returnStdout: true).trim().split('\n')
+                    def changedFiles = sh(script: "git diff --name-only ${targetBranch}...${sourceBranch}", returnStdout: true).trim().split('\n')
 
                     // Extract unique top-level directories
                     def updatedFunctions = changedFiles.collect { it.split('/')[0] }.unique()
