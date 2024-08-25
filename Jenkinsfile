@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        stage("Checkout") {
             steps {
                 checkout scm
             }
@@ -21,24 +21,20 @@ pipeline {
         stage('Detect Changes') {
             steps {
                 script {
-                    // Get the target branch from the PR or default to 'master'
-                    def targetBranch = env.CHANGE_TARGET ?: 'master'
-                    
-                    // Get the PR source branch
-                    def sourceBranch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+                    // Get the base branch (target branch of the PR)
+                    def targetBranch = env.CHANGE_TARGET
 
-                    // Fetch only the target branch and the source branch
-                    sh "git fetch origin ${targetBranch}:${targetBranch}"
-                    sh "git fetch origin ${sourceBranch}:${sourceBranch}"
+                    // Determine the branch the PR is based on
+                    def currentBranch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
 
-                    // Compare changes between the PR source branch and the target branch
-                    def changedFiles = sh(script: "git diff --name-only ${targetBranch}...${sourceBranch}", returnStdout: true).trim().split('\n')
+                    // Compare the current branch with the target branch of the PR
+                    def changedFiles = sh(script: "git diff --name-only origin/${targetBranch}...${currentBranch}", returnStdout: true).trim().split('\n')
 
-                    // Extract unique top-level directories
-                    def updatedFunctions = changedFiles.collect { it.split('/')[0] }.unique()
+                    def updatedFunctions = []
+                    def changedDirs = changedFiles.collect { it.split('/')[0] }.unique()
 
-                    // Set environment variable with changed directories
-                    env.CHANGED_DIRS = updatedFunctions.join(',')
+                    // Set environment variable for changed directories
+                    env.CHANGED_DIRS = changedDirs.join(',')
                 }
             }
         }
