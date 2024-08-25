@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage("Checkout") {
+        stage('Checkout') {
             steps {
                 checkout scm
             }
@@ -21,17 +21,20 @@ pipeline {
         stage('Detect Changes') {
             steps {
                 script {
+                    // Get the target branch from the PR or default to 'master'
                     def targetBranch = env.CHANGE_TARGET ?: 'master'
-                    def currentBranch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+                    
+                    // Ensure the PR source branch is known
+                    def sourceBranch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
 
-                    def branchToCompare = env.CHANGE_TARGET ? "origin/${targetBranch}" : "origin/${currentBranch}"
+                    // Compare changes between the PR source branch and the target branch
+                    def changedFiles = sh(script: "git diff --name-only origin/${targetBranch}...origin/${sourceBranch}", returnStdout: true).trim().split('\n')
 
-                    def changedFiles = sh(script: "git diff --name-only ${branchToCompare}...HEAD", returnStdout: true).trim().split('\n')
+                    // Extract unique top-level directories
+                    def updatedFunctions = changedFiles.collect { it.split('/')[0] }.unique()
 
-                    def updatedFunctions = []
-                    def changedDirs = changedFiles.collect { it.split('/')[0] }.unique()
-
-                    env.CHANGED_DIRS = changedDirs.join(',')
+                    // Set environment variable with changed directories
+                    env.CHANGED_DIRS = updatedFunctions.join(',')
                 }
             }
         }
