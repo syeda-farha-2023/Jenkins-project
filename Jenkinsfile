@@ -22,7 +22,7 @@ pipeline {
             steps {
                 script {
                     // Get the base branch (target branch of the PR)
-                    def targetBranch = env.CHANGE_TARGET
+                    def targetBranch = env.CHANGE_TARGET ?: 'main'
                     
                     // Determine the branch the PR is based on
                     def currentBranch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
